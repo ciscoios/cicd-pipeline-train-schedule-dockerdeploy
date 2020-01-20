@@ -40,7 +40,7 @@ pipeline {
                 /* preventing accidentally deploying an old version over a new one  */
             milestone(1)
                
-            withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'])
+            withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'deploy', passwordVariable: 'jenkins'])
                 script {
                     sh "sshpass -p '$USERPASS' -v ssh -o ScriptHostKeyChecking=no $USERNAME@prod_ip \"docker pull iptcp/train-schedule:${env.BUILD_NUMBER}\""
                     try {

@@ -35,24 +35,3 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Production') {
-            input 'Deploy to Production?' {
-                /* preventing accidentally deploying an old version over a new one  */
-            milestone(1)
-               
-            withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'deploy', passwordVariable: 'jenkins'])
-                script {
-                    sh "sshpass -p '$USERPASS' -v ssh -o ScriptHostKeyChecking=no $USERNAME@prod_ip \"docker pull iptcp/train-schedule:${env.BUILD_NUMBER}\""
-                    try {
-                        sh "sshpass -p '$USERPASS' -v ssh -o ScriptHostKeyChecking=no $USERNAME@prod_ip \"docker stop train-schedule\""
-                        sh "sshpass -p '$USERPASS' -v ssh -o ScriptHostKeyChecking=no $USERNAME@prod_ip \"docker rm train-schedule\""
-                    } catch(err) {
-                        echo: 'caught error: $err'
-                    }
-                        sh "sshpass -p '$USERPASS' -v ssh -o ScriptHostKeyChecking=no $USERNAME@prod_ip \"docker run --restart always --name train-schedule -p 8080:8080 -d sh "sshpass -p '$USERPASS' -v ssh -o ScriptHostKeyChecking=no $USERNAME@prod_ip \"docker rm train-schedule\""
-                                }
-                             }
-                           }
-                         }
-                       }
-                     }
